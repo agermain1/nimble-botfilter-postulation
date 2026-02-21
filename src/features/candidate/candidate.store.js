@@ -33,12 +33,26 @@ export const useCandidateStore = create((set, get) => ({
     }));
 
     try {
-      const payload = {
-        uuid: candidate.uuid,
-        jobId,
-        candidateId: candidate.candidateId,
-        repoUrl,
-      };
+        const jobIdNum = Number(jobId);
+        const candidateIdNum = Number(candidate.candidateId);
+
+        if (!candidate.applicationId) {
+            throw new Error("Falta applicationId en el candidato");
+        }
+        if (Number.isNaN(jobIdNum)) {
+            throw new Error("jobId inválido");
+        }
+        if (Number.isNaN(candidateIdNum)) {
+            throw new Error("candidateId inválido");
+        }
+
+        const payload = {
+            uuid: String(candidate.uuid),
+            applicationId: String(candidate.applicationId),
+            jobId: String(jobId),
+            candidateId: String(candidate.candidateId),
+            repoUrl: String(repoUrl),
+        };
 
       const res = await applyToJob(payload);
 

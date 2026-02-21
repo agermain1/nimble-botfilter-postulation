@@ -5,14 +5,22 @@ export async function http(url, { method = "GET", headers, body } = {}) {
     console.log("Request body:", body);
   }
 
-  const res = await fetch(url, {
-    method,
-    headers: {
-      ...(body ? { "Content-Type": "application/json" } : {}),
-      ...headers,
-    },
-    body: body ? JSON.stringify(body) : undefined,
-  });
+    const hasBody = body !== undefined;
+
+    console.log("Headers:", {
+        ...(hasBody ? { "Content-Type": "application/json", Accept: "application/json" } : {}),
+        ...headers,
+    });
+
+    const res = await fetch(url, {
+        method,
+        headers: {
+            ...(hasBody ? { "Content-Type": "application/json" } : {}),
+            ...(hasBody ? { Accept: "application/json" } : {}),
+            ...headers,
+        },
+        body: hasBody ? JSON.stringify(body) : undefined,
+    });
 
   console.log("Status:", res.status);
 
